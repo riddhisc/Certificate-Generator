@@ -2,7 +2,8 @@ import React, { useState, useRef } from 'react';
 import Card from '../components/ui/card';
 import Input from '../components/ui/input';
 import  Button from '../components/ui/button';
-import { Download, Upload } from 'lucide-react';
+import { Download, Upload } from 'lucide-react'; 
+//import Button from 'component/ui/button;
 
 const CertificateEditor = () => {
   const [certificateData, setCertificateData] = useState({
