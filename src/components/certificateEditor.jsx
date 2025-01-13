@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
 import Card from '../components/ui/card';
 import Input from '../components/ui/input';
-import  Button from '../components/ui/button';
-import { Download, Upload } from 'lucide-react'; 
-
+import Button from '../components/ui/button';
+import { Download, Upload } from 'lucide-react';
+import html2canvas from 'html2canvas';
 
 const CertificateEditor = () => {
   const [certificateData, setCertificateData] = useState({
@@ -34,16 +34,15 @@ const CertificateEditor = () => {
   };
 
   const downloadCertificate = () => {
-    const content = certificateRef.current.outerHTML;
-    const blob = new Blob([content], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${certificateData.recipientName || 'certificate'}.html`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    html2canvas(certificateRef.current).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = imgData;
+      link.download = `${certificateData.recipientName || 'certificate'}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
   };
 
   return (
@@ -115,30 +114,35 @@ const CertificateEditor = () => {
             <div className="w-2/3">
               <div 
                 ref={certificateRef} 
-                className="bg-white p-8 rounded-lg border-8 border-double border-gray-200 shadow-lg"
+                className="bg-white p-10 rounded-lg border-8 border-solid border-gray-800 shadow-lg relative"
+                style={{ width: '750px', height: '450px', overflow: 'hidden' }} // Added overflow to handle content overflow
               >
-                <div className="text-center space-y-6">
-                  {logoPreview && (
-                    <img src={logoPreview} alt="Logo" className="h-24 object-contain mx-auto" />
-                  )}
-                  
-                  <div className="space-y-1">
-                    <h2 className="text-3xl font-serif text-gray-800">Certificate of Completion</h2>
-                    <p className="text-gray-500">This certifies that</p>
-                  </div>
+               <div className="text-center space-y-6">
+                {logoPreview && (
+                  <img 
+                    src={logoPreview} 
+                    alt="Logo" 
+                    className="h-16 object-contain mx-auto mb-4" 
+                  />
+                )}
 
-                  <div className="text-2xl font-serif font-bold text-blue-600">
+                <div className="space-y-2">
+                  <h2 className="text-4xl font-serif text-gray-800">Certificate of Completion</h2>
+                  <p className="text-lg text-gray-500">This certifies that</p>
+                </div>
+
+                  <div className="text-3xl font-semibold text-blue-600">
                     {certificateData.recipientName || 'Recipient Name'}
                   </div>
 
                   <div className="space-y-1">
-                    <p className="text-gray-500">has successfully completed</p>
-                    <div className="text-xl font-semibold text-gray-800">
+                    <p className="text-lg text-gray-500">has successfully completed</p>
+                    <div className="text-2xl font-bold text-gray-800">
                       {certificateData.courseName || 'Course Name'}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-8 text-sm text-gray-600 mt-8">
+                  <div className="grid grid-cols-2 gap-8 text-sm text-gray-600 mt-6">
                     <div>
                       <p>Completion Date</p>
                       <p className="font-semibold">
@@ -153,14 +157,16 @@ const CertificateEditor = () => {
                     </div>
                   </div>
                 </div>
+                <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-600 to-indigo-600"></div> {/* Bottom Decorative Line */}
               </div>
             </div>
           </div>
 
+          
           <div className="flex gap-4">
-            <Button 
-              className="w-full" 
-              size="lg" 
+            <Button
+              className="w-full mt-6"  // Added margin-top for better layout
+              size="lg"
               onClick={downloadCertificate}
               variant="default"
             >
