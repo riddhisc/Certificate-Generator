@@ -4,8 +4,6 @@ import Input from '../components/ui/input';
 import Button from '../components/ui/button';
 import { Download, Upload } from 'lucide-react';
 import html2canvas from 'html2canvas';
-//import html2canvas from 'html2canvas';
-
 
 
 
