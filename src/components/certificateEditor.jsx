@@ -8,9 +8,6 @@ import html2canvas from 'html2canvas';
 
 
 
-
-
-
 const CertificateEditor = () => {
   const [certificateData, setCertificateData] = useState({
     recipientName: '',
